@@ -7,21 +7,21 @@ vm = VendingMachine.new
 vm.slot_money(1000) # 1000
 drink = Drink.new
 puts "***"
-vm.buy(drink)
+vm.purchase(drink)
 vm.comfirm_sales
 puts "***"
-vm.buy(drink)
+vm.purchase(drink)
 vm.comfirm_sales
 puts "***"
-vm.buy(drink)
+vm.purchase(drink)
 vm.comfirm_sales
 puts "***"
-vm.buy(drink)
+vm.purchase(drink)
 vm.comfirm_sales
 puts "***"
-vm.buy(drink)
+vm.purchase(drink)
 vm.comfirm_sales
 puts "***"
-vm.buy(drink)
+vm.purchase(drink)
 vm.comfirm_sales
 puts "***"
