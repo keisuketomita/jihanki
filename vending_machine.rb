@@ -1,11 +1,13 @@
 # irb　(プロジェクトのディレクトリ上で)
 # require './vending_machine'
+# require './submit_step3'
 class VendingMachine
   # 自販機に投入できる硬貨を規定(.freezeによって書き換えを防止(チェリー本p255~256))
   MONEY = [10, 50, 100, 500, 1000].freeze
   def initialize
     # 最初の自動販売機に入っている金額は0円
     @slot_money = 0
+    @sales = 0
   end
   # 投入金額の総計を取得できる。
   def current_slot_money
@@ -31,17 +33,33 @@ class VendingMachine
     @slot_money = 0
     current_slot_money
   end
+  def buy(drink)
+    if drink.price < @slot_money && drink.stock > 0
+      drink.stock -= 1
+      @slot_money -= drink.price
+      @sales += drink.price
+      puts "#{drink.name}を購入しました"
+    # else
+    #   puts "購入できませんでした"
+    end
+    puts "#{drink.name}の在庫は#{drink.stock}個です"
+    current_slot_money
+  end
+  def comfirm_sales
+    puts "#{@sales}円の売上があります"
+  end
 end
 
 class Drink
+  attr_accessor :name, :price, :stock
   def initialize
-    @drink = "coke"
+    @name = "coke"
     @price = 120
     @stock = 5
   end
   def display
-    puts @drink
-    puts @price
-    puts @stock
+    puts "商品名：#{@name}"
+    puts "価格：#{@price}"
+    puts "在庫：#{@stock}"
   end
 end
