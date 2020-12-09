@@ -18,18 +18,19 @@ class VendingMachine
   def return_money
     puts "#{@slot_money}円を返却します"
     @slot_money = 0
-    current_slot_money
+    # current_slot_money
   end
   def purchase(drink)
-    if drink.price < @slot_money && drink.stock > 0
+    if drink.price <= @slot_money && drink.stock > 0
       drink.stock -= 1
       @slot_money -= drink.price
       @sale_amount += drink.price
       puts "#{drink.name}を購入しました"
-    # else
-    #   puts "購入できませんでした"
+      return_money
+    else
+      puts "投入金額不足のため#{drink.name}を購入できませんでした"
+      # current_slot_money
     end
-    current_slot_money
   end
   def confirm_sale_amount
     puts "#{@sale_amount}円の売上があります"
@@ -40,7 +41,7 @@ class VendingMachine
   def available_to_purchase
     puts "購入可能な商品"
     @stocks.each do |stock|
-      puts "・#{stock.name}：残り#{stock.stock}個" if stock.price < @slot_money && stock.stock > 0
+      puts "・#{stock.name}：残り#{stock.stock}個" if stock.price <= @slot_money && stock.stock > 0
     end
   end
 end
