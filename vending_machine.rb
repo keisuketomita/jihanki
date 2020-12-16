@@ -1,9 +1,8 @@
 # irb → require './vending_machine'
 class VendingMachine
-  MONEY = [10, 50, 100, 500, 1000].freeze
+  MONEY = [10, 50, 100, 500, 1000].map(&:freeze).freeze
   def initialize
     @slot_money = 0
-    @sale_amount = 0
     @stocks = []
   end
   def current_slot_money
@@ -13,27 +12,23 @@ class VendingMachine
     puts "#{money}円は存在しない硬貨または紙幣です" unless MONEY.include?(money)
     return false unless MONEY.include?(money)
     @slot_money += money
-    current_slot_money
+    self.current_slot_money
   end
   def return_money
     puts "#{@slot_money}円を返却します"
     @slot_money = 0
-    # current_slot_money
   end
   def purchase(drink)
     if drink.price <= @slot_money && drink.stock > 0
       drink.stock -= 1
       @slot_money -= drink.price
-      @sale_amount += drink.price
       puts "#{drink.name}を購入しました"
-      return_money
+      self.return_money
+      return drink.price
     else
       puts "投入金額不足のため#{drink.name}を購入できませんでした"
-      # current_slot_money
+      return 0
     end
-  end
-  def confirm_sale_amount
-    puts "#{@sale_amount}円の売上があります"
   end
   def stocks(coke, red_bull, water)
     @stocks = [coke, red_bull, water]
@@ -47,13 +42,37 @@ class VendingMachine
 end
 
 class Drink
-  attr_accessor :name, :price, :stock
-  # @coke = self.new(:coke, 120, 5)
-  # @red_bull = self.new(:RedBull, 200, 5)
-  # @water = self.new(:water, 100, 5)
+  attr_reader :name, :price
+  attr_accessor :stock
+  # ドリンクを事前に規定しておくと勝手にドリンクが作られにくい(規定してあるドリンクを作ろうという動機づけになる？)
+  class << self
+    def set_drink_coke
+      # self.new
+      self.new(:coke, 120, 5)
+    end
+    def set_drink_redbull
+      self.new(:RedBull, 200, 10)
+    end
+    def set_drink_water
+      self.new(:water, 100, 20)
+    end
+  end
+  # コーラ初期値でもうまくいく
+  # def initialize(name = :coke, price = 120, stock = 5)
   def initialize(name, price, stock)
     @name = name
     @price = price
     @stock = stock
+  end
+end
+
+class Money
+  attr_accessor :sales
+  def initialize
+    @sales = 0
+  end
+  def sales(sale)
+    @sales += sale
+    puts "#{@sales}円の売上があります"
   end
 end
